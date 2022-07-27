@@ -92,7 +92,7 @@ namespace Nop.Web.Framework
             //we cannot call async methods here. otherwise, an application can hang. so it's a workaround to avoid that
             var allStores = _storeRepository.GetAll(query =>
             {
-                return from s in query orderby s.DisplayOrder, s.Id select s;
+                return from s in query orderby s.DisplayOrder, s.Id where !s.Deleted select s;
             }, cache => default);
             
             var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));

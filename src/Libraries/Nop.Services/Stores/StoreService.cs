@@ -82,14 +82,12 @@ namespace Nop.Services.Stores
         /// A task that represents the asynchronous operation
         /// The task result contains the stores
         /// </returns>
-        public virtual async Task<IList<Store>> GetAllStoresAsync()
+        public virtual Task<IList<Store>> GetAllStoresAsync()
         {
-            var result = await _storeRepository.GetAllAsync(query =>
+            return _storeRepository.GetAllAsync(query =>
             {
-                return from s in query orderby s.DisplayOrder, s.Id select s;
-            }, cache => default);
-
-            return result;
+                return from s in query orderby s.DisplayOrder, s.Id where !s.Deleted select s;
+            }, _ => default);
         }
 
         /// <summary>
@@ -102,7 +100,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<Store> GetStoreByIdAsync(int storeId)
         {
-            return await _storeRepository.GetByIdAsync(storeId, cache => default);
+            return await _storeRepository.GetByIdAsync(storeId, cache => default, false);
         }
 
         /// <summary>
