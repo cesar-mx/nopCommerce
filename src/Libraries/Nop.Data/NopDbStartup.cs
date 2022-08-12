@@ -59,7 +59,8 @@ namespace Nop.Data
 
             using var scope = services.BuildServiceProvider(false).CreateScope();
             var runner = scope.ServiceProvider.GetRequiredService<IMigrationManager>();
-            runner.UpMigration(new Migrations.UpgradeTo460.StoreMigration());
+            foreach (var assembly in mAssemblies)
+                runner.ApplyUpMigrations(assembly, MigrationProcessType.NoDependencies);
         }
 
         /// <summary>
